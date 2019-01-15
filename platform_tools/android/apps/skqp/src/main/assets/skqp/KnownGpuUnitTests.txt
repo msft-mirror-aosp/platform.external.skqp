@@ -62,7 +62,6 @@ ImageNewShader_GPU
 ImagePeek_Gpu
 ImageReadPixels_Gpu
 ImageScalePixels_Gpu
-InitialTextureClear
 LazyProxyReleaseTest
 LazyProxyTest
 OnFlushCallbackTest
@@ -85,8 +84,6 @@ ResourceCacheCache
 ResourceCacheMisc
 ResourceCacheStencilBuffers
 ResourceCacheWrappedResources
-SRGBMipMaps
-SRGBReadWritePixels
 SkImage_MakeCrossContextFromEncodedRelease
 SkImage_MakeCrossContextFromPixmapRelease
 SkImage_NewFromTextureRelease
