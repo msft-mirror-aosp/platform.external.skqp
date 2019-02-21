@@ -92,6 +92,7 @@ void Window::onResize(int w, int h) {
         return;
     }
     fWindowContext->resize(w, h);
+    this->visitLayers([=](Layer* layer) { layer->onResize(w, h); });
 }
 
 int Window::width() {
@@ -117,7 +118,7 @@ void Window::setRequestedDisplayParams(const DisplayParams& params, bool /* allo
 
 int Window::sampleCount() const {
     if (!fWindowContext) {
-        return -1;
+        return 0;
     }
     return fWindowContext->sampleCount();
 }
@@ -129,7 +130,7 @@ int Window::stencilBits() const {
     return fWindowContext->stencilBits();
 }
 
-const GrContext* Window::getGrContext() const {
+GrContext* Window::getGrContext() const {
     if (!fWindowContext) {
         return nullptr;
     }

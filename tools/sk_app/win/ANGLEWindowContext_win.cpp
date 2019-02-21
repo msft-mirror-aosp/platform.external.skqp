@@ -6,6 +6,8 @@
  * found in the LICENSE file.
  */
 
+#define EGL_EGL_PROTOTYPES 1
+
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
 #include "../GLWindowContext.h"
@@ -76,7 +78,8 @@ sk_sp<const GrGLInterface> ANGLEGLWindowContext_win::onInitializeContext() {
     }
     EGLint numConfigs;
     fSampleCount = this->getDisplayParams().fMSAASampleCount;
-    const int sampleBuffers = fSampleCount > 0 ? 1 : 0;
+    const int sampleBuffers = fSampleCount > 1 ? 1 : 0;
+    const int eglSampleCnt = fSampleCount > 1 ? fSampleCount : 0;
     const EGLint configAttribs[] = {EGL_RENDERABLE_TYPE,
                                     // We currently only support ES3.
                                     EGL_OPENGL_ES3_BIT,
@@ -91,7 +94,7 @@ sk_sp<const GrGLInterface> ANGLEGLWindowContext_win::onInitializeContext() {
                                     EGL_SAMPLE_BUFFERS,
                                     sampleBuffers,
                                     EGL_SAMPLES,
-                                    fSampleCount,
+                                    eglSampleCnt,
                                     EGL_NONE};
 
     EGLConfig surfaceConfig;
