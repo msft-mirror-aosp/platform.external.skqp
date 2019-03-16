@@ -502,7 +502,7 @@ pathopsinverse,-1
 pathopsskpclip,-1
 pdf_crbug_772685,0
 pdf_never_embed,-1
-perlinnoise,0
+perlinnoise,200
 perlinnoise_localmatrix,0
 persp_images,-1
 persp_shaders_aa,-1
@@ -532,7 +532,7 @@ radial_gradient3,0
 radial_gradient3_nodither,0
 radial_gradient4,-1
 radial_gradient4_nodither,-1
-radial_gradient_precision,0
+radial_gradient_precision,-1
 readpixels,0
 readpixelscodec,0
 readpixelspicture,0
