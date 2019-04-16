@@ -264,6 +264,12 @@ std::tuple<SkQP::RenderOutcome, std::string> SkQP::evaluateGM(SkQP::SkiaBackend 
     static constexpr SkQP::RenderOutcome kError = {INT_MAX, INT_MAX, INT64_MAX};
     static constexpr SkQP::RenderOutcome kPass = {0, 0, 0};
 
+    std::unique_ptr<sk_gpu_test::TestContext> testCtx = make_test_context(backend);
+    if (!testCtx) {
+        return std::make_tuple(kError, "Skia Failure: test context");
+    }
+    testCtx->makeCurrent();
+
     SkASSERT(gmFact);
     std::unique_ptr<skiagm::GM> gm(gmFact(nullptr));
     SkASSERT(gm);
@@ -275,11 +281,6 @@ std::tuple<SkQP::RenderOutcome, std::string> SkQP::evaluateGM(SkQP::SkiaBackend 
         SkImageInfo::Make(w, h, skqp::kColorType, kPremul_SkAlphaType, nullptr);
     const SkSurfaceProps props(0, SkSurfaceProps::kLegacyFontHost_InitType);
 
-    std::unique_ptr<sk_gpu_test::TestContext> testCtx = make_test_context(backend);
-    if (!testCtx) {
-        return std::make_tuple(kError, "Skia Failure: test context");
-    }
-    testCtx->makeCurrent();
     sk_sp<SkSurface> surf = SkSurface::MakeRenderTarget(
             testCtx->makeGrContext(context_options(gm.get())).get(),
             SkBudgeted::kNo, info, 0, &props);
@@ -455,7 +456,7 @@ void SkQP::makeReport() {
         }
         const char* backendName = SkQP::GetBackendName(run.fBackend);
         std::string gmName = SkQP::GetGMName(run.fGM);
-        SkQP::RenderOutcome outcome;
+        const SkQP::RenderOutcome& outcome = run.fOutcome;
         auto str = SkStringPrintf("\"%s\",\"%s\",%d,%d,%" PRId64, backendName, gmName.c_str(),
                                   outcome.fMaxError, outcome.fBadPixelCount, outcome.fTotalError);
         write(&csvOut, SkStringPrintf("%s\n", str.c_str()));
