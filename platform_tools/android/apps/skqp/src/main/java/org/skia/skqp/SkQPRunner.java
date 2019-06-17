@@ -27,6 +27,7 @@ import org.junit.runner.notification.RunNotifier;
 public class SkQPRunner extends Runner implements Filterable {
     private int mShouldRunTestCount;
     private Description[] mTests;
+    private Description mDescription;
     private boolean[] mShouldSkipTest;
     private SkQP impl;
     private static final String TAG = SkQP.LOG_PREFIX;
@@ -58,8 +59,9 @@ public class SkQPRunner extends Runner implements Filterable {
         AssetManager mAssetManager = resources.getAssets();
         impl.nInit(mAssetManager, filesDir.getAbsolutePath(), false);
 
-        mTests = new Description[this.testCount()];
-        mShouldSkipTest = new boolean[mTests.length]; // = {false, false, ....};
+        int totalCount = impl.mUnitTests.length + impl.mGMs.length * impl.mBackends.length;
+        mTests = new Description[totalCount];
+        mShouldSkipTest = new boolean[totalCount]; // = {false, false, ....};
         int index = 0;
         String badIdentifiers = "[^A-Za-z0-9_]";
         for (int backend = 0; backend < impl.mBackends.length; backend++) {
@@ -74,37 +76,35 @@ public class SkQPRunner extends Runner implements Filterable {
             String name = ("unitTest_" + impl.mUnitTests[unitTest]).replaceAll(badIdentifiers, "_");
             mTests[index++] = Description.createTestDescription(SkQPRunner.class, name);
         }
-        assert(index == mTests.length);
-        mShouldRunTestCount = mTests.length;
+        assert(index == totalCount);
+        this.updateDescription(null);
+    }
+
+    private void updateDescription(Filter filter) {
+        mShouldRunTestCount = 0;
+        mDescription = Description.createSuiteDescription(SkQP.class);
+        assert(mTests.length == mShouldSkipTest.length);
+        for (int i = 0; i < mTests.length; ++i) {
+            boolean doRunTest = filter != null ? filter.shouldRun(mTests[i]) : true;
+            mShouldSkipTest[i] = !doRunTest;
+            if (doRunTest) {
+                mDescription.addChild(mTests[i]);
+                ++mShouldRunTestCount;
+            }
+        }
     }
 
     @Override
     public void filter(Filter filter) throws NoTestsRemainException {
-        int count = 0;
-        for (int i = 0; i < mTests.length; ++i) {
-            mShouldSkipTest[i] = !filter.shouldRun(mTests[i]);
-            if (!mShouldSkipTest[i]) {
-                ++count;
-            }
-        }
-        mShouldRunTestCount = count;
-        if (0 == count) {
+        this.updateDescription(filter);
+        if (0 == mShouldRunTestCount) {
             throw new NoTestsRemainException();
         }
     }
 
     @Override
     public Description getDescription() {
-        Description d = Description.createSuiteDescription(SkQP.class);
-        for (int i = 0; i < mTests.length; ++i) {
-            d.addChild(mTests[i]);
-        }
-        return d;
-    }
-
-    @Override
-    public int testCount() {
-        return impl.mUnitTests.length + impl.mGMs.length * impl.mBackends.length;
+        return mDescription;
     }
 
     @Override
