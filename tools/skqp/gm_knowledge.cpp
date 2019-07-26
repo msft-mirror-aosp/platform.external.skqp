@@ -57,6 +57,8 @@ static bool good_enough(const char* name, int64_t badnessMetric) {
         { "circular_arcs_weird",                    13000 },
         { "complexclip2_path_aa",                   570   },
         { "complexclip2_rrect_aa",                  150  },
+        { "complexclip2_rrect_aa",                  200   },
+        { "complexclip3_complex",                   350   },
         { "drawTextRSXform",                        1100  },
         { "drrect",                                 410   },
         { "gradients_2pt_conical_inside_repeat",    340  },
