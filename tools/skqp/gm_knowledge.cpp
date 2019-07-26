@@ -64,7 +64,7 @@ static bool good_enough(const char* name, int64_t badnessMetric) {
         { "simpleshapes",                           200   },
         { "skbug1719",                              920   },
         { "strokes_poly",                           1100  },
-        { "stroketext",                             700   },
+        { "stroketext",                             850   },
     };
     for (auto allowedBadness : allowedBadnesses) {
         if (0 == strcmp(allowedBadness.name, name)) {
