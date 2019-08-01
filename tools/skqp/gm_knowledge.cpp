@@ -60,6 +60,8 @@ static bool good_enough(const char* name, int64_t badnessMetric) {
         { "drawTextRSXform",                        1100  },
         { "drrect",                                 410   },
         { "gradients_2pt_conical_inside_repeat",    340  },
+        { "lcdblendmodes",                          9000 },
+        { "lcdoverlap",                             9000 },
         { "patheffect",                             260   },
         { "simpleshapes",                           200   },
         { "skbug1719",                              920   },
