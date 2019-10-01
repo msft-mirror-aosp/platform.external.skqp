@@ -66,7 +66,7 @@ static bool good_enough(const char* name, int64_t badnessMetric) {
         { "lcdoverlap",                             20000 },
         { "patheffect",                             260   },
         { "simpleshapes",                           200   },
-        { "skbug1719",                              920   },
+        { "skbug1719",                              1500  },
         { "strokes_poly",                           1100  },
         { "stroketext",                             850   },
         { "bitmap_subset_shader",                   600   },
