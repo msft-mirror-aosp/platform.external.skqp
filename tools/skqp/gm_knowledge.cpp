@@ -57,14 +57,19 @@ static bool good_enough(const char* name, int64_t badnessMetric) {
         { "circular_arcs_weird",                    13000 },
         { "complexclip2_path_aa",                   570   },
         { "complexclip2_rrect_aa",                  150  },
+        { "complexclip2_rrect_aa",                  200   },
+        { "complexclip3_complex",                   350   },
         { "drawTextRSXform",                        1100  },
         { "drrect",                                 410   },
         { "gradients_2pt_conical_inside_repeat",    340  },
+        { "lcdblendmodes",                          15000 },
+        { "lcdoverlap",                             20000 },
         { "patheffect",                             260   },
         { "simpleshapes",                           200   },
-        { "skbug1719",                              920   },
+        { "skbug1719",                              1500  },
         { "strokes_poly",                           1100  },
-        { "stroketext",                             700   },
+        { "stroketext",                             850   },
+        { "bitmap_subset_shader",                   600   },
     };
     for (auto allowedBadness : allowedBadnesses) {
         if (0 == strcmp(allowedBadness.name, name)) {
