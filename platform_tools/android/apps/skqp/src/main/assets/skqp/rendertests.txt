@@ -140,8 +140,8 @@ coloremoji_blendmodes,0
 colorfilteralpha8,0
 colorfilterimagefilter,0
 colorfilterimagefilter_layer,0
-colorfiltershader,0
-colormatrix,1
+colorfiltershader,50000
+colormatrix,200
 colorwheel,0
 colorwheelnative,0
 combinemaskfilter,0
@@ -533,7 +533,6 @@ radial_gradient3_nodither,0
 radial_gradient4,-1
 radial_gradient4_nodither,-1
 radial_gradient_precision,-1
-readpixels,0
 readpixelscodec,0
 readpixelspicture,0
 recordopts,0
