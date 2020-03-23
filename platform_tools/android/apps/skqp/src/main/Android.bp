@@ -9,7 +9,6 @@ android_test {
     test_suites: [
         "cts",
         "vts",
-        "general-tests",
     ],
     libs: ["android.test.runner.stubs"],
     jni_libs: ["libskqp_app"],
