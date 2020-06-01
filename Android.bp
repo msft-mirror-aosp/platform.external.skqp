@@ -1631,6 +1631,8 @@ cc_library_shared {
         },
     },
 
+    header_libs: ["jni_headers"],
+
     shared_libs: [
           "libandroid",
           "libEGL",
