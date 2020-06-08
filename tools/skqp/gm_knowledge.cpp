@@ -63,7 +63,7 @@ static bool good_enough(const char* name, int64_t badnessMetric) {
         { "gradients_2pt_conical_inside_repeat",    340  },
         { "lcdblendmodes",                          15000 },
         { "lcdoverlap",                             20000 },
-        { "patheffect",                             260   },
+        { "patheffect",                             280   },
         { "simpleshapes",                           200   },
         { "skbug1719",                              1500  },
         { "strokes_poly",                           1100  },
