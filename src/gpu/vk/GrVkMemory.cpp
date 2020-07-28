@@ -191,7 +191,8 @@ bool GrVkMemory::AllocAndBindImageMemory(const GrVkGpu* gpu,
                                                      VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
                                                      &typeIndex,
                                                      &heapIndex));
-        if (memReqs.size <= kMaxSmallImageSize) {
+        // select the heap based on the device alignment
+        if (align_size(memReqs.size, memReqs.alignment) <= kMaxSmallImageSize) {
             heap = gpu->getHeap(GrVkGpu::kSmallOptimalImage_Heap);
         } else {
             heap = gpu->getHeap(GrVkGpu::kOptimalImage_Heap);
