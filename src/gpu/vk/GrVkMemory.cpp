@@ -602,6 +602,10 @@ bool GrVkHeap::subAlloc(VkDeviceSize size, VkDeviceSize alignment,
         return false;
     }
 
+    // check memoryTypeIndex and heapIndex before allocation
+    SkASSERT_RELEASE(memoryTypeIndex < fGpu->physicalDeviceMemoryProperties().memoryTypeCount);
+    SkASSERT_RELEASE(heapIndex < fGpu->physicalDeviceMemoryProperties().memoryHeapCount);
+
     // need to allocate a new subheap
     std::unique_ptr<GrVkSubHeap>& subHeap = fSubHeaps.push_back();
     subHeap.reset(new GrVkSubHeap(fGpu, memoryTypeIndex, heapIndex, fSubHeapSize, alignment));
@@ -649,6 +653,10 @@ bool GrVkHeap::singleAlloc(VkDeviceSize size, VkDeviceSize alignment,
         }
         return false;
     }
+
+    // check memoryTypeIndex and heapIndex before allocation
+    SkASSERT_RELEASE(memoryTypeIndex < fGpu->physicalDeviceMemoryProperties().memoryTypeCount);
+    SkASSERT_RELEASE(heapIndex < fGpu->physicalDeviceMemoryProperties().memoryHeapCount);
 
     // need to allocate a new subheap
     std::unique_ptr<GrVkSubHeap>& subHeap = fSubHeaps.push_back();
