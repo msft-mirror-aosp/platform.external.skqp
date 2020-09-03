@@ -125,6 +125,7 @@ void suballoc_test(skiatest::Reporter* reporter, GrContext* context) {
     const VkDeviceSize kAlignment = 16;
     const uint32_t kMemType = 0;
     const uint32_t kHeapIndex = 0;
+    const uint32_t kMemoryTypeCount = gpu->physicalDeviceMemoryProperties().memoryTypeCount;
 
     REPORTER_ASSERT(reporter, heap.allocSize() == 0 && heap.usedSize() == 0);
 
@@ -163,16 +164,21 @@ void suballoc_test(skiatest::Reporter* reporter, GrContext* context) {
     heap.free(alloc0);
     REPORTER_ASSERT(reporter, heap.alloc(24 * 1024, kAlignment, kMemType, kHeapIndex, &alloc0));
     REPORTER_ASSERT(reporter, heap.allocSize() == 128 * 1024 && heap.usedSize() == 24 * 1024);
-    // heap should alloc a new subheap because the memory type is different
-    REPORTER_ASSERT(reporter, heap.alloc(24 * 1024, kAlignment, kMemType+1, kHeapIndex, &alloc1));
-    REPORTER_ASSERT(reporter, heap.allocSize() == 192 * 1024 && heap.usedSize() == 48 * 1024);
     // heap should alloc a new subheap because the alignment is different
-    REPORTER_ASSERT(reporter, heap.alloc(24 * 1024, 128, kMemType, kHeapIndex, &alloc2));
-    REPORTER_ASSERT(reporter, heap.allocSize() == 256 * 1024 && heap.usedSize() == 72 * 1024);
-    heap.free(alloc2);
+    REPORTER_ASSERT(reporter, heap.alloc(24 * 1024, 128, kMemType, kHeapIndex, &alloc1));
+    REPORTER_ASSERT(reporter, heap.allocSize() == 192 * 1024 && heap.usedSize() == 48 * 1024);
+    // on supported device heap should alloc a new subheap because the memory type is different
+    if (kMemType+1 < kMemoryTypeCount) {
+        REPORTER_ASSERT(reporter, heap.alloc(24 * 1024, kAlignment, kMemType + 1, kHeapIndex, &alloc2));
+        REPORTER_ASSERT(reporter, heap.allocSize() == 256 * 1024 && heap.usedSize() == 72 * 1024);
+        heap.free(alloc2);
+    }
     heap.free(alloc0);
     heap.free(alloc1);
-    REPORTER_ASSERT(reporter, heap.allocSize() == 256 * 1024 && heap.usedSize() == 0 * 1024);
+    if (kMemType+1 < kMemoryTypeCount)
+        REPORTER_ASSERT(reporter, heap.allocSize() == 256 * 1024 && heap.usedSize() == 0 * 1024);
+    else
+        REPORTER_ASSERT(reporter, heap.allocSize() == 192 * 1024 && heap.usedSize() == 0 * 1024);
 }
 
 void singlealloc_test(skiatest::Reporter* reporter, GrContext* context) {
@@ -184,6 +190,7 @@ void singlealloc_test(skiatest::Reporter* reporter, GrContext* context) {
     const VkDeviceSize kAlignment = 64;
     const uint32_t kMemType = 0;
     const uint32_t kHeapIndex = 0;
+    const uint32_t kMemoryTypeCount = gpu->physicalDeviceMemoryProperties().memoryTypeCount;
 
     REPORTER_ASSERT(reporter, heap.allocSize() == 0 && heap.usedSize() == 0);
 
@@ -218,16 +225,21 @@ void singlealloc_test(skiatest::Reporter* reporter, GrContext* context) {
     REPORTER_ASSERT(reporter, heap.allocSize() == 112 * 1024 && heap.usedSize() == 0 * 1024);
     REPORTER_ASSERT(reporter, heap.alloc(24 * 1024, kAlignment, kMemType, kHeapIndex, &alloc0));
     REPORTER_ASSERT(reporter, heap.allocSize() == 112 * 1024 && heap.usedSize() == 24 * 1024);
-    // heap should alloc a new subheap because the memory type is different
-    REPORTER_ASSERT(reporter, heap.alloc(24 * 1024, kAlignment, kMemType + 1, kHeapIndex, &alloc1));
-    REPORTER_ASSERT(reporter, heap.allocSize() == 136 * 1024 && heap.usedSize() == 48 * 1024);
     // heap should alloc a new subheap because the alignment is different
-    REPORTER_ASSERT(reporter, heap.alloc(24 * 1024, 128, kMemType, kHeapIndex, &alloc2));
-    REPORTER_ASSERT(reporter, heap.allocSize() == 160 * 1024 && heap.usedSize() == 72 * 1024);
+    REPORTER_ASSERT(reporter, heap.alloc(24 * 1024, 128, kMemType, kHeapIndex, &alloc1));
+    REPORTER_ASSERT(reporter, heap.allocSize() == 136 * 1024 && heap.usedSize() == 48 * 1024);
+    // on supported device heap should alloc a new subheap because the memory type is different
+    if (kMemType + 1 < kMemoryTypeCount) {
+        REPORTER_ASSERT(reporter, heap.alloc(24 * 1024, kAlignment, kMemType + 1, kHeapIndex, &alloc2));
+        REPORTER_ASSERT(reporter, heap.allocSize() == 160 * 1024 && heap.usedSize() == 72 * 1024);
+        heap.free(alloc2);
+    }
     heap.free(alloc1);
-    heap.free(alloc2);
     heap.free(alloc0);
-    REPORTER_ASSERT(reporter, heap.allocSize() == 160 * 1024 && heap.usedSize() == 0 * 1024);
+    if (kMemType + 1 < kMemoryTypeCount)
+        REPORTER_ASSERT(reporter, heap.allocSize() == 160 * 1024 && heap.usedSize() == 0 * 1024);
+    else
+        REPORTER_ASSERT(reporter, heap.allocSize() == 136 * 1024 && heap.usedSize() == 0 * 1024);
 }
 
 DEF_GPUTEST_FOR_VULKAN_CONTEXT(VkHeapTests, reporter, ctxInfo) {
