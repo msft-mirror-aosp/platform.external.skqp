@@ -8,7 +8,6 @@ DeferredProxyTest
 DeferredTextureImage
 DefferredProxyConversionTest
 DetermineDomainModeTest
-EGLImageTest
 ES2BlendWithNoTexture
 EmptySurfaceSemaphoreTest
 FloatingPointTextureTest
