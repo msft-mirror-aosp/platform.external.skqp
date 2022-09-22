@@ -382,7 +382,7 @@ imagealphathreshold_surface,0
 imageblur,-1
 imageblur2,2
 imageblur_large,0
-imageblurclampmode,1
+imageblurclampmode,-1
 imageblurrepeatmode,0
 imageblurtiled,0
 imagefilters_xfermodes,-1
